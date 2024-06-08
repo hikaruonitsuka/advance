@@ -7,7 +7,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body>{children}</body>
+      <body className="text-sm sm:text-base">{children}</body>
     </html>
   );
 }
