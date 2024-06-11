@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { FC } from 'react';
 import { ClassNameValue, twMerge } from 'tailwind-merge';
 import { match } from 'ts-pattern';
 
@@ -12,7 +11,7 @@ type Props = Simplify<{
   className?: ClassNameValue;
 }>;
 
-const Typography: FC<Props> = ({ component, variant, className, children, ...props }) => {
+const Typography = ({ component, variant, className, children, ...props }: Props) => {
   const Component = component;
 
   const fontStyle = match(variant)
