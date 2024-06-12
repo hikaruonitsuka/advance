@@ -16,13 +16,13 @@ export default function Register() {
               <Typography className="text-center" component={'h2'} variant={'h2'}>
                 新規登録
               </Typography>
-              <Typography component={'p'} variant={'p'}>
-                テキストテキストテキストテキストテキストテキストテキスト
+              <Typography className="flex justify-center" component={'p'} variant={'p'}>
+                ユーザー名はタイムラインに表示されます。 （設定で非表示が可能です）
               </Typography>
             </div>
             <div className="flex flex-col gap-y-4">
-              <button className="mx-auto flex w-full max-w-md items-center justify-center gap-x-2 rounded-lg border border-gray-300 px-4 py-3 text-sm font-bold transition-opacity hover:opacity-60">
-                <FaGithub />
+              <button className="mx-auto flex w-full max-w-md items-center justify-center gap-x-2 rounded-lg border border-gray-300 px-4 py-3 text-sm font-bold transition-opacity hover:opacity-60 sm:text-base">
+                <FaGithub className="sm:size-5" />
                 GitHub
               </button>
               <Typography className="text-sm sm:text-center" component={'p'} variant={'p'}>
