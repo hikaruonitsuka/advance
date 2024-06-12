@@ -6,7 +6,7 @@ export default function Header() {
       <Link href="/">Logo</Link>
       <div className="flex items-center gap-x-4">
         <button>ログイン</button>
-        <Link href="/">新規登録</Link>
+        <Link href="/register">新規登録</Link>
       </div>
     </header>
   );
