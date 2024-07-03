@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import { FaGithub } from 'react-icons/fa6';
 
 import Inner from '@/components/common/Inner';
 import PageFv from '@/components/common/PageFv';
 import Typography from '@/components/common/Typography';
+
+import GithubLoginButton from '@/features/login/GithubLoginButton';
 
 export default function Register() {
   return (
@@ -21,10 +22,7 @@ export default function Register() {
               </Typography>
             </div>
             <div className="flex flex-col gap-y-4">
-              <button className="mx-auto flex w-full max-w-md items-center justify-center gap-x-2 rounded-lg border border-gray-300 px-4 py-3 text-sm font-bold transition-opacity hover:opacity-60 sm:text-base">
-                <FaGithub className="sm:size-5" />
-                GitHub
-              </button>
+              <GithubLoginButton />
               <Typography className="text-sm sm:text-center" component={'p'} variant={'p'}>
                 <Link className="underline transition-opacity hover:opacity-60" href="/">
                   利用規約
