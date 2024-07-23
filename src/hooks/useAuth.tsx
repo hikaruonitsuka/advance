@@ -1,6 +1,7 @@
 import { Session } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 
+import { BASE_URL } from '@/const';
 import supabase from '@/lib/supabase';
 
 export const useAuth = () => {
@@ -20,6 +21,9 @@ export const useAuth = () => {
   const signInWithGithub = async () => {
     await supabase.auth.signInWithOAuth({
       provider: 'github',
+      options: {
+        redirectTo: `${BASE_URL}/register/user-setup`,
+      },
     });
   };
 
