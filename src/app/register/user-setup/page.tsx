@@ -76,7 +76,10 @@ export default function userSetup() {
                   プライバシー設定
                   <span className="text-xs font-normal">他の利用者のタイムラインに表示されないようにします</span>
                 </Label>
-                <Switch />
+                <div className="flex items-center gap-x-4">
+                  <Switch />
+                  <span>プライベートモードをオンにする</span>
+                </div>
               </div>
             </div>
             <div className="mt-16">
