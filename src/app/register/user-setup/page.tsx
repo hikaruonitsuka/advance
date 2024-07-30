@@ -72,7 +72,7 @@ export default function userSetup() {
                 <Textarea placeholder="自己紹介文を入力" />
               </div>
               <div className="flex flex-col gap-y-8">
-                <Label className="flex flex-col gap-y-1 font-bold" htmlFor="message">
+                <Label className="flex flex-col gap-y-2 font-bold" htmlFor="message">
                   プライバシー設定
                   <span className="text-xs font-normal">他の利用者のタイムラインに表示されないようにします</span>
                 </Label>
