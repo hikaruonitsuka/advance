@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,25 +7,62 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  profile   profiles?
+/// 性別の選択肢: male、female
+enum Genders {
+  male
+  female
 }
 
-model profiles {
+/// ユーザーモデル: 認証に使用される基本情報を格納
+model Users {
+  /// ユーザーの一意なID (UUID)
+  id        String   @id @default(uuid())
+
+  /// ユーザーのメールアドレス。必ず一意である必要がある。
+  email     String   @unique
+
+  /// ユーザーが作成された日時。デフォルトで現在のタイムスタンプが使用される。
+  createdAt DateTime @default(now()) @map("created_at")
+
+  /// ユーザー情報が最後に更新された日時。自動で更新される。
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  /// プロフィール情報。各ユーザーに1つのプロフィールが紐づく。
+  profile   Profiles?
+}
+
+/// プロフィールモデル: ユーザーの追加情報を格納
+model Profiles {
+  /// プロフィールの一意なID (UUID)
   id               String   @id @default(uuid())
+
+  /// ユーザーのアバター画像のURL。オプションフィールド。
   avatarImageUrl   String?  @map("avatar_image_url")
+
+  /// ユーザーの表示名。255文字までの入力が可能。
   profileName      String   @map("profile_name")
-  gender           String   @map("gender") @db.VarChar(10)
+
+  /// 性別の選択肢 (male, female) Enumを使用。
+  gender           Genders   @map("gender")
+
+  /// 学習カテゴリ。任意のフィールドで255文字まで。
   learningCategory String?  @map("learning_category")
+
+  /// 自己紹介テキスト。任意のフィールド。
   selfIntroduction String?  @map("self_introduction")
+
+  /// プライバシー設定。デフォルトはfalse（公開）。
   isPrivate        Boolean  @default(false) @map("is_private")
+
+  /// プロフィール作成日時。デフォルトで現在のタイムスタンプが使用される。
   createdAt        DateTime @default(now()) @map("created_at")
+
+  /// プロフィールが最後に更新された日時。自動で更新される。
   updatedAt        DateTime @updatedAt @map("updated_at")
+
+  /// このプロフィールが属するユーザーのID。auth.usersとの一意な関連。
   userId           String   @unique @map("user_id")
 
-  user users @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Usersモデルとのリレーション。userIdで関連付けられている。
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
