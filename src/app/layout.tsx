@@ -11,7 +11,7 @@ export default function RootLayout({
     <html lang="ja">
       <body className="grid min-h-screen grid-cols-[100%] grid-rows-[auto,1fr,auto] text-sm sm:text-base">
         <Header />
-        <main>{children}</main>
+        <main className="pb-16">{children}</main>
         <Footer />
       </body>
     </html>
