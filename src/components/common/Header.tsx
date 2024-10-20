@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { getSession, signInWithGithub, signOut } from '@/app/data/auth';
+import { getSession, signInWithGithub, signOut } from '@/app/action/auth';
 
 export default async function Header() {
   const userId = await getSession();

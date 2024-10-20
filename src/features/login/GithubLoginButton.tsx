@@ -1,6 +1,6 @@
 import { FaGithub } from 'react-icons/fa6';
 
-import { signInWithGithub } from '@/app/data/auth';
+import { signInWithGithub } from '@/app/action/auth';
 
 export default function GithubLoginButton() {
   return (
