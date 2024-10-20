@@ -1,13 +1,15 @@
-// 公式ドキュメント通りの作成だが型エラーが出るので一部無効にする
+// 公式ドキュメント通りの作成だが型エラーが出るので@types/cookieをインストールして対応
 // https://github.com/supabase/ssr/issues/53
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
+import { createServerClient } from '@supabase/ssr';
+import { type CookieSerializeOptions } from 'cookie';
+import { cookies } from 'next/headers';
+
+type CookieOptions = Partial<CookieSerializeOptions>;
 
 /**
  * サーバー側で利用するSupabaseクライアントを作成
  */
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
-
 export function createClient() {
   const cookieStore = cookies();
 
@@ -18,7 +20,7 @@ export function createClient() {
       },
       setAll(cookiesToSet) {
         try {
-          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
+          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options as CookieOptions));
         } catch {
           // The `setAll` method was called from a Server Component.
           // This can be ignored if you have middleware refreshing
