@@ -43,10 +43,12 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const isLoginPage = request.nextUrl.pathname.startsWith('/login');
+  // 遷移させたくないページを管理
+  const allowedPages = ['/', '/login', '/register'];
+  const isAllowedPage = allowedPages.some((page) => request.nextUrl.pathname.startsWith(page));
 
-  if (!user && !isLoginPage) {
-    // ユーザーがいない場合、ユーザーをログインページにリダイレクトする可能性があります
+  // ユーザーがいないかつ、指定されたページでなければログインページへリダイレクト
+  if (!user && !isAllowedPage) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);
