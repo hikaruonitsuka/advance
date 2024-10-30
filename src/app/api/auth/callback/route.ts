@@ -5,9 +5,6 @@ import { createClient } from '@/lib/supabase/server';
 /**
  * 認証コードを処理してリダイレクト処理を行うGETリクエストハンドラ
  *
- * @param {Request} request - リクエストオブジェクト
- * @returns {Promise<NextResponse>} - リダイレクトレスポンス
- *
  * リクエストURLから認証コードを取得し、Supabaseクライアントを使用して、認証コードをセッションに交換する。
  * 認証が成功した場合、リクエストヘッダーや環境変数に基づいて適切なURLにリダイレクトを行う。
  * 認証コードが無効な場合やエラーが発生した場合は、エラーページにリダイレクトする。
