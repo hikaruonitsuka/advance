@@ -36,19 +36,21 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  // IMPORTANT: createServerClient と supabase.auth.getUser の間にロジックを書かないでください。
+  // IMPORTANT: この間にロジックを追加してはいけない
   // 単純なミスでも、ユーザーがランダムにログアウトされる問題のデバッグが非常に困難になる可能性があります。
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // 遷移させたくないページを管理
-  const allowedPages = ['/', '/login', '/register'];
-  const isAllowedPage = allowedPages.some((page) => request.nextUrl.pathname.startsWith(page));
-
-  // ユーザーがいないかつ、指定されたページでなければログインページへリダイレクト
-  if (!user && !isAllowedPage) {
+  // リダイレクト処理
+  // ユーザーが存在しない場合、特定のページにも滞在していない場合はログインページへリダイレクト
+  if (
+    !user &&
+    request.nextUrl.pathname !== '/' &&
+    !request.nextUrl.pathname.startsWith('/login') &&
+    !request.nextUrl.pathname.startsWith('/register')
+  ) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);
