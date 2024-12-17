@@ -2,7 +2,7 @@ import Inner from '@/components/common/Inner';
 import PageFv from '@/components/common/PageFv';
 import Typography from '@/components/common/Typography';
 
-import RegisterForm from '@/app/user-setup/register-form';
+import CreateUserForm from '@/feature/user-setup/components/CreateUserForm';
 
 export default function userSetup() {
   return (
@@ -10,7 +10,7 @@ export default function userSetup() {
       <PageFv />
       <div className="mt-20">
         <Inner>
-          <div className="mx-auto max-w-2xl">
+          <div className="mx-auto max-w-xl">
             <div className="flex flex-col gap-y-6">
               <Typography className="text-center" component="h2" variant="h2">
                 キャラクター作成
@@ -19,7 +19,7 @@ export default function userSetup() {
                 あなたの分身となるキャラクターを作成しましょう。
               </Typography>
             </div>
-            <RegisterForm />
+            <CreateUserForm />
           </div>
         </Inner>
       </div>

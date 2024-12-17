@@ -1,6 +1,4 @@
-/**
- * Supabaseで生成したデータベースの型定義ファイル
- */
+/* eslint-disable */
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
@@ -39,71 +37,78 @@ export type Database = {
         };
         Relationships: [];
       };
-      Profiles: {
+      profile_tags: {
         Row: {
-          avatar_image_url: string | null;
-          created_at: string;
-          gender: Database['public']['Enums']['Genders'];
-          id: string;
-          is_private: boolean;
-          learning_category: string | null;
-          profile_name: string;
-          self_introduction: string | null;
-          updated_at: string;
-          user_id: string;
+          profile_id: string;
+          tag_id: string;
         };
         Insert: {
-          avatar_image_url?: string | null;
-          created_at?: string;
-          gender: Database['public']['Enums']['Genders'];
-          id: string;
-          is_private?: boolean;
-          learning_category?: string | null;
-          profile_name: string;
-          self_introduction?: string | null;
-          updated_at: string;
-          user_id: string;
+          profile_id: string;
+          tag_id: string;
         };
         Update: {
-          avatar_image_url?: string | null;
-          created_at?: string;
-          gender?: Database['public']['Enums']['Genders'];
-          id?: string;
-          is_private?: boolean;
-          learning_category?: string | null;
-          profile_name?: string;
-          self_introduction?: string | null;
-          updated_at?: string;
-          user_id?: string;
+          profile_id?: string;
+          tag_id?: string;
         };
         Relationships: [
           {
-            foreignKeyName: 'Profiles_user_id_fkey';
-            columns: ['user_id'];
+            foreignKeyName: 'profile_tags_profile_id_fkey';
+            columns: ['profile_id'];
             isOneToOne: false;
-            referencedRelation: 'Users';
+            referencedRelation: 'profiles';
+            referencedColumns: ['auth_id'];
+          },
+          {
+            foreignKeyName: 'profile_tags_tag_id_fkey';
+            columns: ['tag_id'];
+            isOneToOne: false;
+            referencedRelation: 'tags';
             referencedColumns: ['id'];
           },
         ];
       };
-      Users: {
+      profiles: {
         Row: {
-          created_at: string;
-          email: string;
-          id: string;
-          updated_at: string;
+          auth_id: string;
+          avatar_image_url: string | null;
+          gender: Database['public']['Enums']['Genders'];
+          is_private: boolean;
+          is_profile_complete: boolean;
+          name: string;
+          self_introduction: string | null;
         };
         Insert: {
-          created_at?: string;
-          email: string;
-          id: string;
-          updated_at: string;
+          auth_id: string;
+          avatar_image_url?: string | null;
+          gender?: Database['public']['Enums']['Genders'];
+          is_private?: boolean;
+          is_profile_complete?: boolean;
+          name?: string;
+          self_introduction?: string | null;
         };
         Update: {
-          created_at?: string;
-          email?: string;
+          auth_id?: string;
+          avatar_image_url?: string | null;
+          gender?: Database['public']['Enums']['Genders'];
+          is_private?: boolean;
+          is_profile_complete?: boolean;
+          name?: string;
+          self_introduction?: string | null;
+        };
+        Relationships: [];
+      };
+      tags: {
+        Row: {
+          id: string;
+          name: string;
+        };
+        Insert: {
           id?: string;
-          updated_at?: string;
+          name: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
         };
         Relationships: [];
       };
@@ -193,4 +198,17 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions['schema']]['Enums'][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema['Enums']
     ? PublicSchema['Enums'][PublicEnumNameOrOptions]
+    : never;
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends keyof PublicSchema['CompositeTypes'] | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database;
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema['CompositeTypes']
+    ? PublicSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
     : never;

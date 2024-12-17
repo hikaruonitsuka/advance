@@ -33,6 +33,7 @@ export const signInWithGithub = async () => {
 export const signOut = async () => {
   const supabase = createClient();
   await supabase.auth.signOut();
+  redirect('/');
 };
 
 /**
@@ -40,6 +41,8 @@ export const signOut = async () => {
  *
  * セッション情報を取得する非同期関数
  * セッション情報が存在する場合はユーザーIDを返す
+ *
+ * ※重要な処理を行う場合はSessionからIDを取得するのではなく、getUser関数を利用する
  */
 export const getSession = async () => {
   const supabase = createClient();
@@ -49,3 +52,15 @@ export const getSession = async () => {
 
   return session?.user.id;
 };
+
+// /**
+//  * ユーザー情報取得（認証されているかどうかをチェック）
+//  */
+// export const getUser = async () => {
+//   const supabase = createClient();
+//   const {
+//     data: { user },
+//   } = await supabase.auth.getUser();
+
+//   return user;
+// };

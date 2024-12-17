@@ -5,6 +5,8 @@ import { createServerClient } from '@supabase/ssr';
 import { type CookieSerializeOptions } from 'cookie';
 import { NextResponse, type NextRequest } from 'next/server';
 
+import { Database } from '@/lib/supabase/database.types';
+
 type CookieOptions = Partial<CookieSerializeOptions>;
 
 /**
@@ -15,7 +17,7 @@ export async function updateSession(request: NextRequest) {
     request,
   });
 
-  const supabase = createServerClient(
+  const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -54,6 +56,31 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);
+  }
+
+  // ユーザーがプロフィール設定を完了していない場合はプロフィール設定ページへリダイレクト
+  if (user) {
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('is_profile_complete')
+      .eq('auth_id', user.id)
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    // プロフィール作成がすでに済んでいるユーザーはそのまま返す
+    if (profile.is_profile_complete) {
+      return supabaseResponse;
+    }
+
+    // 作成が済んでいないユーザーはプロフィール作成ページへリダイレクト
+    if (!request.nextUrl.pathname.startsWith('/user-setup')) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/user-setup';
+      return NextResponse.redirect(url);
+    }
   }
 
   // IMPORTANT: supabaseResponse オブジェクトをそのまま返す必要があります。NextResponse.next() で新しいレスポンスオブジェクトを作成する場合は、以下の手順を守ってください:

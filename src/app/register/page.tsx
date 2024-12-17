@@ -1,10 +1,9 @@
 import Link from 'next/link';
 
+import GithubLoginButton from '@/components/button/GithubLoginButton';
 import Inner from '@/components/common/Inner';
 import PageFv from '@/components/common/PageFv';
 import Typography from '@/components/common/Typography';
-
-import GithubLoginButton from '@/features/login/GithubLoginButton';
 
 export default function Register() {
   return (
