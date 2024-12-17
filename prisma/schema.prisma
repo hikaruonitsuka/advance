@@ -3,9 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL") 
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 /// 性別の選択肢: male、female
@@ -14,27 +14,37 @@ enum Genders {
   female
 }
 
+/// タグモデル: カテゴリのタグを格納
+model Tags {
+  id       String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name     String        @unique @db.VarChar(20)
+  profiles ProfileTags[] // 中間テーブルとのリレーション
+
+  @@map("tags")
+}
 
 /// プロフィールモデル: ユーザーの追加情報を格納
 model Profiles {
-  /// プロフィールの一意なID (UUID)
-  id                String   @id @default(uuid())
-  /// ユーザーのアバター画像のURL。オプションフィールド。
-  avatarImageUrl    String?  @map("avatar_image_url")
-  /// ユーザーの表示名。255文字までの入力が可能。
-  profileName       String   @default("") @map("profile_name")
-  /// 性別の選択肢 (male, female) Enumを使用。
-  gender            Genders  @default(male) @map("gender")
-  /// 学習カテゴリ。任意のフィールドで255文字まで。
-  learningCategory  String?  @map("learning_category")
-  /// 自己紹介テキスト。任意のフィールド。
-  selfIntroduction  String?  @map("self_introduction")
-  /// プライバシー設定。デフォルトはfalse（公開）。
-  isPrivate         Boolean  @default(false) @map("is_private")
-  /// プロフィール設定が完了しているかのフラグ
-  isProfileComplete Boolean @default(false) @map("is_profile_complete")
-  /// このプロフィールが属するユーザーのID。auth.usersとの一意な関連。
-  authId            String  @unique @map("auth_id")
+  authId            String        @id @map("auth_id") @db.Uuid // 必ず外部からUUIDを渡す
+  avatarImageUrl    String?       @map("avatar_image_url")
+  name              String        @default("")
+  gender            Genders       @default(male)
+  tags              ProfileTags[] // 中間テーブルとのリレーション
+  selfIntroduction  String?       @default("") @map("self_introduction") @db.VarChar(200)
+  isPrivate         Boolean       @default(true) @map("is_private")
+  isProfileComplete Boolean       @default(false) @map("is_profile_complete")
 
   @@map("profiles")
+}
+
+/// 中間テーブル: Profiles と Tags のリレーション
+model ProfileTags {
+  profileId String @map("profile_id") @db.Uuid
+  tagId     String @map("tag_id") @db.Uuid
+
+  profile Profiles @relation(fields: [profileId], references: [authId])
+  tag     Tags     @relation(fields: [tagId], references: [id])
+
+  @@id([profileId, tagId]) // 複合主キー
+  @@map("profile_tags") // テーブル名を明示
 }
