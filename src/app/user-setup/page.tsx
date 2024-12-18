@@ -2,7 +2,7 @@ import Inner from '@/components/common/Inner';
 import PageFv from '@/components/common/PageFv';
 import Typography from '@/components/common/Typography';
 
-import CreateUserForm from '@/feature/user-setup/components/CreateUserForm';
+import CreateUserFormContainer from '@/feature/user-setup/CreateUserFormContainer';
 
 export default function userSetup() {
   return (
@@ -19,7 +19,7 @@ export default function userSetup() {
                 あなたの分身となるキャラクターを作成しましょう。
               </Typography>
             </div>
-            <CreateUserForm />
+            <CreateUserFormContainer />
           </div>
         </Inner>
       </div>
