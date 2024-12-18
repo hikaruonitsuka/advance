@@ -1,4 +1,7 @@
 {
+  "rules": {
+    "no-hard-code-id": false
+  },
   "specs": {
     "\\.[jt]sx?$": "@markuplint/react-spec"
   },

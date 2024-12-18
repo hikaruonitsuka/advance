@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+/// 性別の選択肢: male、female
+enum Genders {
+  male
+  female
+}
+
+/// タグモデル: カテゴリのタグを格納
+model Tags {
+  id       String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name     String        @unique @db.VarChar(20)
+  profiles ProfileTags[] // 中間テーブルとのリレーション
+
+  @@map("tags")
+}
+
+/// プロフィールモデル: ユーザーの追加情報を格納
+model Profiles {
+  authId            String        @id @map("auth_id") @db.Uuid // 必ず外部からUUIDを渡す
+  avatarImageUrl    String?       @map("avatar_image_url")
+  name              String        @default("")
+  gender            Genders       @default(male)
+  tags              ProfileTags[] // 中間テーブルとのリレーション
+  selfIntroduction  String?       @default("") @map("self_introduction") @db.VarChar(200)
+  isPrivate         Boolean       @default(true) @map("is_private")
+  isProfileComplete Boolean       @default(false) @map("is_profile_complete")
+
+  @@map("profiles")
+}
+
+/// 中間テーブル: Profiles と Tags のリレーション
+model ProfileTags {
+  profileId String @map("profile_id") @db.Uuid
+  tagId     String @map("tag_id") @db.Uuid
+
+  profile Profiles @relation(fields: [profileId], references: [authId])
+  tag     Tags     @relation(fields: [tagId], references: [id])
+
+  @@id([profileId, tagId]) // 複合主キー
+  @@map("profile_tags") // テーブル名を明示
+}

@@ -1,21 +1,22 @@
-'use client';
-
 import Link from 'next/link';
 
-import { useAuth } from '@/hooks/useAuth';
+import { getSession, signInWithGithub, signOut } from '@/app/action/auth';
 
-export default function Header() {
-  const { session, signInWithGithub, signOut } = useAuth();
-  console.log(session);
+export default async function Header() {
+  const userId = await getSession();
 
   return (
     <header className="mx-auto flex w-full max-w-7xl items-center justify-between p-4">
       <Link href="/">Logo</Link>
-      {session ? (
-        <button onClick={() => void signOut()}>ログアウト</button>
+      {userId ? (
+        <form action={signOut}>
+          <button>ログアウト</button>
+        </form>
       ) : (
         <div className="flex items-center gap-x-4">
-          <button onClick={() => void signInWithGithub()}>ログイン</button>
+          <form action={signInWithGithub}>
+            <button>ログインする</button>
+          </form>
           <Link href="/register">新規登録</Link>
         </div>
       )}
