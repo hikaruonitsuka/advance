@@ -39,21 +39,21 @@ export type Database = {
       };
       profile_tags: {
         Row: {
-          profile_id: string;
+          auth_id: string;
           tag_id: string;
         };
         Insert: {
-          profile_id: string;
+          auth_id: string;
           tag_id: string;
         };
         Update: {
-          profile_id?: string;
+          auth_id?: string;
           tag_id?: string;
         };
         Relationships: [
           {
-            foreignKeyName: 'profile_tags_profile_id_fkey';
-            columns: ['profile_id'];
+            foreignKeyName: 'profile_tags_auth_id_fkey';
+            columns: ['auth_id'];
             isOneToOne: false;
             referencedRelation: 'profiles';
             referencedColumns: ['auth_id'];
