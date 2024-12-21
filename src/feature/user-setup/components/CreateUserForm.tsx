@@ -76,7 +76,7 @@ export const CreateUserForm = ({ form, control, fields, append, remove, uploadin
         />
         <FormItem className="grid gap-y-2">
           <fieldset className="contents">
-            <legend className="text-base font-bold">学習カテゴリ</legend>
+            <legend className="text-base font-bold">学習タグ</legend>
             <TagsInputField append={append} control={control} fields={fields} remove={remove} />
           </fieldset>
         </FormItem>
