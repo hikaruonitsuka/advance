@@ -5,6 +5,7 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import { createClient } from '@/lib/supabase/client';
 import { getUserFromSession } from '@/utils/auth';
 
+import { registerAvatarImage, RegisterTagsAndLinkProfile } from '../function/register';
 import CreateUserFormSchema from '../schema';
 
 export const useCreateUserForm = () => {
@@ -38,60 +39,40 @@ export const useCreateUserForm = () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      // 現在のユーザーIDを取得
+
       const authId = await getUserFromSession(supabase, session);
 
       if (!authId) {
         throw new Error('ログインしていないか、セッションが無効です。');
       }
 
-      // 更新データを作成
-      const updateData = {
+      // 登録データを作成
+      const registerData = {
         avatar_image_url: '',
         name: values.name,
         gender: values.gender,
         is_private: values.is_private,
-        is_profile_complete: false, // プロフィールが完了しているかどうかをここで管理
+        is_profile_complete: true, // プロフィールが完了しているかどうかをここで管理
         self_introduction: values.self_introduction,
       };
 
-      // 画像がアップロードされている場合はアップロード
-      const avatarFile = values.avatar_image;
-      if (avatarFile instanceof File) {
-        // 拡張子を取得
-        const extension = avatarFile.name.split('.').pop()?.toLowerCase();
+      // タグ登録とプロフィールとの紐付けを行う
+      await RegisterTagsAndLinkProfile(authId, values.tags, supabase);
 
-        if (!extension) {
-          throw new Error('ファイル拡張子が無効です。');
-        }
-
-        // 一意なファイル名を生成
-        const fileName = `${authId}/avatar-image.${extension}`;
-
-        // アップロード処理
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('avatars')
-          .upload(fileName, avatarFile, {
-            upsert: true, // 上書き許可
-          });
-
-        if (uploadError) {
-          throw new Error(`画像アップロードエラー: ${uploadError.message}`);
-        }
-
-        // 新しい画像パスを更新データに追加
-        updateData.avatar_image_url = uploadData.path;
+      // 画像がアップロードされている場合はアップロードしてアバターの画像パスを取得する
+      if (values.avatar_image instanceof File) {
+        const avatarImagePath = await registerAvatarImage(authId, values.avatar_image, supabase);
+        registerData.avatar_image_url = avatarImagePath;
       }
 
-      console.log(updateData);
-
-      // プロフィールを更新
-      const { error } = await supabase.from('profiles').update(updateData).eq('auth_id', authId).select();
+      // プロフィールを登録
+      const { error } = await supabase.from('profiles').update(registerData).eq('auth_id', authId).select();
 
       if (error) {
-        console.error(error);
+        throw new Error(error.message);
       }
     } catch (error) {
+      // TODO:エラー処理をもう少し具体的にしたいためまた後で修正
       console.error(error);
     } finally {
       setUploading(false);
